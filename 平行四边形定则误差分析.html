@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>力的合成平行四边形定则虚拟实验</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #3f51b5;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #546e7a;
+            font-size: 1.1rem;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .experiment-panel {
+            flex: 1;
+            min-width: 650px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+        }
+        
+        .control-panel {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+        }
+        
+        .panel-title {
+            font-size: 1.3rem;
+            color: #3f51b5;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        canvas {
+            display: block;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin: 0 auto 20px;
+        }
+        
+        .scale-control {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .scale-control label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .scale-control input {
+            width: 120px;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .force-controls {
+            margin-bottom: 25px;
+        }
+        
+        .force-control {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .force-control h3 {
+            color: #37474f;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+        
+        .control-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .control-row label {
+            width: 120px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .control-row input, .control-row select {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .control-row.slider-row {
+            display: flex;
+            align-items: center;
+        }
+        
+        .control-row.slider-row input[type="range"] {
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .control-row.slider-row span {
+            width: 50px;
+            text-align: right;
+        }
+        
+        .toggle-control {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: #f0f7ff;
+            border-radius: 8px;
+        }
+        
+        .toggle-control label {
+            margin-left: 10px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .toggle-control input {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .result-table th {
+            background-color: #3f51b5;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        
+        .result-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .result-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .result-table tr:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .error-row {
+            font-weight: bold;
+            color: #d32f2f;
+        }
+        
+        .data-recording {
+            background-color: #fff8e1;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+        }
+        
+        .data-recording h2 {
+            color: #f57c00;
+            margin-bottom: 15px;
+        }
+        
+        .data-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            background-color: #3f51b5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #303f9f;
+        }
+        
+        .btn.record {
+            background-color: #4caf50;
+        }
+        
+        .btn.record:hover {
+            background-color: #388e3c;
+        }
+        
+        .btn.clear {
+            background-color: #f44336;
+        }
+        
+        .btn.clear:hover {
+            background-color: #d32f2f;
+        }
+        
+        .btn.export {
+            background-color: #ff9800;
+        }
+        
+        .btn.export:hover {
+            background-color: #f57c00;
+        }
+        
+        .recorded-data {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        
+        .recorded-data table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .recorded-data th {
+            background-color: #ff9800;
+            color: white;
+            padding: 10px 12px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+        }
+        
+        .recorded-data td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #ffcc80;
+            text-align: center;
+        }
+        
+        .recorded-data tr:nth-child(even) {
+            background-color: #fff3e0;
+        }
+        
+        .instructions {
+            background-color: #e8f5e9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+        }
+        
+        .instructions h2 {
+            color: #388e3c;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .instructions p {
+            margin-bottom: 15px;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 8px;
+            border-radius: 2px;
+        }
+        
+        .legend-color.f1 {
+            background-color: #000000;
+        }
+        
+        .legend-color.f2 {
+            background-color: #333333;
+        }
+        
+        .legend-color.f-theory {
+            background-color: #f44336;
+        }
+        
+        .legend-color.f-real {
+            background-color: #2196f3;
+        }
+        
+        .angle-note {
+            background-color: #e3f2fd;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #1565c0;
+        }
+        
+        .angle-range-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 1100px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .experiment-panel, .control-panel {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>力的合成平行四边形定则虚拟实验</h1>
+        <p class="subtitle">通过力的图示法验证平行四边形定则，计算合力并与真实值比较</p>
+    </header>
+    
+    <div class="container">
+        <div class="experiment-panel">
+            <h2 class="panel-title">实验画布</h2>
+            <div class="scale-control">
+                <label for="scale">标度设置 (像素/牛):</label>
+                <input type="number" id="scale" min="5" max="50" step="1" value="20">
+            </div>
+            
+            <canvas id="experimentCanvas" width="600" height="500"></canvas>
+            
+            <div class="angle-note">
+                <strong>角度坐标系说明：</strong> 角度以x轴正方向为0°，逆时针旋转为正方向（-360°~360°）。y轴正方向向上，对应角度为90°或-270°。
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color f1"></div>
+                    <span>分力 F₁</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color f2"></div>
+                    <span>分力 F₂</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color f-theory"></div>
+                    <span>理论合力 F'</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color f-real"></div>
+                    <span>真实合力 F</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="control-panel">
+            <h2 class="panel-title">力参数控制</h2>
+            
+            <div class="force-controls">
+                <div class="force-control">
+                    <h3>分力 F₁ 设置</h3>
+                    <div class="control-row">
+                        <label for="f1-mag">大小 (N):</label>
+                        <input type="number" id="f1-mag" min="0.1" max="20" step="0.1" value="5.0">
+                    </div>
+                    <div class="control-row slider-row">
+                        <label for="f1-slider">大小调节:</label>
+                        <input type="range" id="f1-slider" min="1" max="200" step="1" value="50">
+                        <span id="f1-slider-value">5.0</span>
+                    </div>
+                    <div class="control-row">
+                        <label for="f1-angle">方向 (°):</label>
+                        <input type="number" id="f1-angle" min="-360" max="360" step="1" value="30">
+                    </div>
+                    <div class="control-row slider-row">
+                        <label for="f1-angle-slider">方向调节:</label>
+                        <input type="range" id="f1-angle-slider" min="-360" max="360" step="1" value="30">
+                        <span id="f1-angle-value">30°</span>
+                    </div>
+                    <div class="angle-range-info">
+                        <span>-360°</span>
+                        <span>0°</span>
+                        <span>360°</span>
+                    </div>
+                </div>
+                
+                <div class="force-control">
+                    <h3>分力 F₂ 设置</h3>
+                    <div class="control-row">
+                        <label for="f2-mag">大小 (N):</label>
+                        <input type="number" id="f2-mag" min="0.1" max="20" step="0.1" value="8.0">
+                    </div>
+                    <div class="control-row slider-row">
+                        <label for="f2-slider">大小调节:</label>
+                        <input type="range" id="f2-slider" min="1" max="200" step="1" value="80">
+                        <span id="f2-slider-value">8.0</span>
+                    </div>
+                    <div class="control-row">
+                        <label for="f2-angle">方向 (°):</label>
+                        <input type="number" id="f2-angle" min="-360" max="360" step="1" value="120">
+                    </div>
+                    <div class="control-row slider-row">
+                        <label for="f2-angle-slider">方向调节:</label>
+                        <input type="range" id="f2-angle-slider" min="-360" max="360" step="1" value="120">
+                        <span id="f2-angle-value">120°</span>
+                    </div>
+                    <div class="angle-range-info">
+                        <span>-360°</span>
+                        <span>0°</span>
+                        <span>360°</span>
+                    </div>
+                </div>
+                
+                <div class="toggle-control">
+                    <input type="checkbox" id="show-real-force" checked>
+                    <label for="show-real-force">显示真实合力 F (蓝色箭头)</label>
+                </div>
+                
+                <div class="force-control">
+                    <h3>真实合力 F 设置</h3>
+                    <div class="control-row">
+                        <label for="f-real-mag">大小 (N):</label>
+                        <input type="number" id="f-real-mag" min="0.1" max="30" step="0.1" value="10.2">
+                    </div>
+                    <div class="control-row">
+                        <label for="f-real-angle">方向 (°):</label>
+                        <input type="number" id="f-real-angle" min="-360" max="360" step="1" value="85">
+                    </div>
+                    <button id="auto-calc-btn" class="btn">自动计算理论值</button>
+                </div>
+            </div>
+            
+            <h2 class="panel-title">结果与分析</h2>
+            <table class="result-table">
+                <thead>
+                    <tr>
+                        <th>力</th>
+                        <th>大小 (N)</th>
+                        <th>方向 (°)</th>
+                        <th>标准化方向 (°)</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>分力 F₁</td>
+                        <td id="result-f1-mag">5.0</td>
+                        <td id="result-f1-angle">30</td>
+                        <td id="result-f1-angle-norm">30</td>
+                        <td>黑色箭头</td>
+                    </tr>
+                    <tr>
+                        <td>分力 F₂</td>
+                        <td id="result-f2-mag">8.0</td>
+                        <td id="result-f2-angle">120</td>
+                        <td id="result-f2-angle-norm">120</td>
+                        <td>黑色箭头</td>
+                    </tr>
+                    <tr>
+                        <td>理论合力 F'</td>
+                        <td id="result-f-theory-mag">10.2</td>
+                        <td id="result-f-theory-angle">85.2</td>
+                        <td id="result-f-theory-angle-norm">85.2</td>
+                        <td>红色箭头</td>
+                    </tr>
+                    <tr>
+                        <td>真实合力 F</td>
+                        <td id="result-f-real-mag">10.2</td>
+                        <td id="result-f-real-angle">85</td>
+                        <td id="result-f-real-angle-norm">85</td>
+                        <td>蓝色实线箭头</td>
+                    </tr>
+                    <tr class="error-row">
+                        <td>相对误差</td>
+                        <td id="magnitude-error">0.0%</td>
+                        <td id="direction-error">0.0%</td>
+                        <td>-</td>
+                        <td>大小和方向误差</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="data-recording">
+        <h2>实验数据记录</h2>
+        <div class="data-buttons">
+            <button id="record-btn" class="btn record">记录当前数据</button>
+            <button id="clear-btn" class="btn clear">清空记录</button>
+            <button id="export-btn" class="btn export">导出为CSV</button>
+        </div>
+        <div class="recorded-data">
+            <table id="data-table">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>F₁ (N)</th>
+                        <th>F₁方向 (°)</th>
+                        <th>F₂ (N)</th>
+                        <th>F₂方向 (°)</th>
+                        <th>F'理论 (N)</th>
+                        <th>F'方向 (°)</th>
+                        <th>F真实 (N)</th>
+                        <th>F方向 (°)</th>
+                        <th>大小误差%</th>
+                        <th>方向误差%</th>
+                    </tr>
+                </thead>
+                <tbody id="data-table-body">
+                    <!-- 数据行将动态添加 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="instructions">
+        <h2>实验原理与操作说明</h2>
+        
+        <h3>实验原理</h3>
+        <p>力的平行四边形定则：两个力合成时，以表示这两个力的线段为邻边作平行四边形，这两个邻边之间的对角线就代表合力的大小和方向。公式表示为：</p>
+        <p><strong>F' = F₁ + F₂</strong></p>
+        <p>其中F'为合力，F₁和F₂为分力。合力的大小可通过余弦定理计算：</p>
+        <p><strong>|F'| = √(F₁² + F₂² + 2F₁F₂cosθ)</strong></p>
+        <p>合力的方向：tanα = (F₂sinθ)/(F₁ + F₂cosθ)，其中θ为F₁与F₂的夹角，α为F'与F₁的夹角。</p>
+        
+        <h3>角度坐标系说明</h3>
+        <p>本实验采用标准的数学极坐标系，角度范围扩展为-360°到360°：</p>
+        <ul>
+            <li>原点在画布中心，x轴正方向向右，y轴正方向向上</li>
+            <li>角度以x轴正方向为0°，逆时针旋转为正方向，顺时针旋转为负方向</li>
+            <li>角度范围：-360° 到 360°</li>
+            <li>标准化角度：为了方便比较，所有角度都会标准化到0°~360°范围</li>
+            <li>角度对应关系：
+                <ul>
+                    <li>0°：x轴正方向（向右）</li>
+                    <li>90° 或 -270°：y轴正方向（向上）</li>
+                    <li>180° 或 -180°：x轴负方向（向左）</li>
+                    <li>270° 或 -90°：y轴负方向（向下）</li>
+                    <li>360° 或 0°：x轴正方向（向右）</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h3>实验设计</h3>
+        <p>本实验通过力的图示法，使用有向线段表示力的大小和方向，通过绘制平行四边形来验证力的合成规律。</p>
+        
+        <h3>操作说明</h3>
+        <ul>
+            <li><strong>标度设置</strong>：调整左上角的标度值，改变力的大小与箭头长度的比例关系。</li>
+            <li><strong>分力调节</strong>：通过输入框或滑块调节两个分力的大小和方向（-360°~360°）。</li>
+            <li><strong>真实合力</strong>：可以输入真实合力的值（或隐藏），与理论值进行误差分析。</li>
+            <li><strong>自动计算</strong>：点击"自动计算理论值"按钮，将理论合力值填入真实合力栏，便于比较。</li>
+            <li><strong>数据记录</strong>：使用"记录当前数据"按钮保存实验数据，可多次记录并导出为CSV文件。</li>
+            <li><strong>观察变化</strong>：调整分力时，观察平行四边形和合力的实时变化，理解力的合成规律。</li>
+        </ul>
+        
+        <h3>误差分析</h3>
+        <p>相对误差计算公式：</p>
+        <p>大小误差 = |F'大小 - F大小| / F大小 × 100%</p>
+        <p>方向误差 = |标准化(F'方向) - 标准化(F方向)| / 360 × 100%</p>
+        <p>本实验可用于验证平行四边形定则的正确性，分析实验误差来源（如测量误差、作图误差等）。</p>
+    </div>
+
+    <script>
+        // 获取Canvas元素和上下文
+        const canvas = document.getElementById('experimentCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 获取所有输入元素
+        const scaleInput = document.getElementById('scale');
+        const f1MagInput = document.getElementById('f1-mag');
+        const f1Slider = document.getElementById('f1-slider');
+        const f1SliderValue = document.getElementById('f1-slider-value');
+        const f1AngleInput = document.getElementById('f1-angle');
+        const f1AngleSlider = document.getElementById('f1-angle-slider');
+        const f1AngleValue = document.getElementById('f1-angle-value');
+        const f2MagInput = document.getElementById('f2-mag');
+        const f2Slider = document.getElementById('f2-slider');
+        const f2SliderValue = document.getElementById('f2-slider-value');
+        const f2AngleInput = document.getElementById('f2-angle');
+        const f2AngleSlider = document.getElementById('f2-angle-slider');
+        const f2AngleValue = document.getElementById('f2-angle-value');
+        const fRealMagInput = document.getElementById('f-real-mag');
+        const fRealAngleInput = document.getElementById('f-real-angle');
+        const showRealForceCheckbox = document.getElementById('show-real-force');
+        const autoCalcBtn = document.getElementById('auto-calc-btn');
+        
+        // 获取数据记录相关元素
+        const recordBtn = document.getElementById('record-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const exportBtn = document.getElementById('export-btn');
+        const dataTableBody = document.getElementById('data-table-body');
+        
+        // 获取结果显示元素
+        const resultF1Mag = document.getElementById('result-f1-mag');
+        const resultF1Angle = document.getElementById('result-f1-angle');
+        const resultF1AngleNorm = document.getElementById('result-f1-angle-norm');
+        const resultF2Mag = document.getElementById('result-f2-mag');
+        const resultF2Angle = document.getElementById('result-f2-angle');
+        const resultF2AngleNorm = document.getElementById('result-f2-angle-norm');
+        const resultFTheoryMag = document.getElementById('result-f-theory-mag');
+        const resultFTheoryAngle = document.getElementById('result-f-theory-angle');
+        const resultFTheoryAngleNorm = document.getElementById('result-f-theory-angle-norm');
+        const resultFRealMag = document.getElementById('result-f-real-mag');
+        const resultFRealAngle = document.getElementById('result-f-real-angle');
+        const resultFRealAngleNorm = document.getElementById('result-f-real-angle-norm');
+        const magnitudeError = document.getElementById('magnitude-error');
+        const directionError = document.getElementById('direction-error');
+        
+        // 初始化变量
+        let scale = parseInt(scaleInput.value);
+        let f1 = { mag: parseFloat(f1MagInput.value), angle: parseFloat(f1AngleInput.value) };
+        let f2 = { mag: parseFloat(f2MagInput.value), angle: parseFloat(f2AngleInput.value) };
+        let fReal = { mag: parseFloat(fRealMagInput.value), angle: parseFloat(fRealAngleInput.value) };
+        let showRealForce = showRealForceCheckbox.checked;
+        
+        // 坐标原点（画布中心）
+        const originX = canvas.width / 2;
+        const originY = canvas.height / 2;
+        
+        // 存储实验记录
+        let experimentRecords = [];
+        let recordCounter = 1;
+        
+        // 角度标准化函数：将角度转换为0-360度范围
+        function normalizeAngle(angle) {
+            let normalized = angle % 360;
+            if (normalized < 0) {
+                normalized += 360;
+            }
+            return normalized;
+        }
+        
+        // 角度转弧度函数
+        function toRadians(degrees) {
+            return degrees * Math.PI / 180;
+        }
+        
+        // 弧度转角度函数
+        function toDegrees(radians) {
+            return radians * 180 / Math.PI;
+        }
+        
+        // 计算理论合力
+        function calculateTheoreticalResultant(f1, f2) {
+            // 使用标准化角度进行计算
+            const angle1 = toRadians(f1.angle);
+            const angle2 = toRadians(f2.angle);
+            
+            // 计算分力的x和y分量
+            const f1x = f1.mag * Math.cos(angle1);
+            const f1y = f1.mag * Math.sin(angle1);
+            const f2x = f2.mag * Math.cos(angle2);
+            const f2y = f2.mag * Math.sin(angle2);
+            
+            // 计算合力的x和y分量
+            const rx = f1x + f2x;
+            const ry = f1y + f2y;
+            
+            // 计算合力的大小和方向
+            const magnitude = Math.sqrt(rx * rx + ry * ry);
+            let angle = toDegrees(Math.atan2(ry, rx));
+            
+            return { 
+                mag: magnitude, 
+                angle: angle,
+                angleNorm: normalizeAngle(angle)
+            };
+        }
+        
+        // 计算相对误差
+        function calculateError(theoretical, real) {
+            // 大小误差
+            const magError = Math.abs(theoretical.mag - real.mag) / real.mag * 100;
+            
+            // 方向误差（使用标准化角度）
+            const angleDiff = Math.abs(theoretical.angleNorm - real.angleNorm);
+            const minAngleDiff = Math.min(angleDiff, 360 - angleDiff);
+            const angleError = minAngleDiff / 360 * 100;
+            
+            return { 
+                magError: magError.toFixed(2), 
+                angleError: angleError.toFixed(2) 
+            };
+        }
+        
+        // 绘制箭头
+        function drawArrow(x, y, length, angle, color, label, isDashed = false) {
+            ctx.save();
+            ctx.translate(x, y);
+            // 注意：Canvas的y轴正方向是向下的，所以需要将角度取负
+            ctx.rotate(-toRadians(angle));
+            
+            // 设置线条样式
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 2;
+            
+            if (isDashed) {
+                ctx.setLineDash([5, 5]);
+            } else {
+                ctx.setLineDash([]);
+            }
+            
+            // 绘制箭头线
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(length, 0);
+            ctx.stroke();
+            
+            // 绘制箭头头部
+            ctx.beginPath();
+            ctx.moveTo(length, 0);
+            ctx.lineTo(length - 10, -5);
+            ctx.lineTo(length - 10, 5);
+            ctx.closePath();
+            ctx.fill();
+            
+            // 绘制标签
+            ctx.setLineDash([]);
+            ctx.font = "14px Arial";
+            ctx.fillStyle = color;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "bottom";
+            ctx.fillText(label, length / 2, -5);
+            
+            ctx.restore();
+        }
+        
+        // 绘制平行四边形
+        function drawParallelogram(f1, f2, fTheory) {
+            const f1Length = f1.mag * scale;
+            const f2Length = f2.mag * scale;
+            const f1Angle = toRadians(f1.angle);
+            const f2Angle = toRadians(f2.angle);
+            
+            // 绘制平行四边形
+            ctx.save();
+            ctx.strokeStyle = "#9e9e9e";
+            ctx.lineWidth = 1;
+            ctx.setLineDash([3, 3]);
+            
+            // 注意：Canvas的y轴正方向是向下的，所以需要将y分量取负
+            // 平行四边形的四个顶点
+            const p1 = { x: originX, y: originY };
+            const p2 = { 
+                x: originX + f1Length * Math.cos(f1Angle), 
+                y: originY - f1Length * Math.sin(f1Angle) 
+            };
+            const p3 = { 
+                x: originX + fTheory.mag * scale * Math.cos(toRadians(fTheory.angle)), 
+                y: originY - fTheory.mag * scale * Math.sin(toRadians(fTheory.angle)) 
+            };
+            const p4 = { 
+                x: originX + f2Length * Math.cos(f2Angle), 
+                y: originY - f2Length * Math.sin(f2Angle) 
+            };
+            
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.lineTo(p3.x, p3.y);
+            ctx.lineTo(p4.x, p4.y);
+            ctx.closePath();
+            ctx.stroke();
+            
+            ctx.restore();
+        }
+        
+        // 绘制坐标轴和标度
+        function drawAxesAndScale() {
+            // 清除画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制坐标轴
+            ctx.save();
+            ctx.strokeStyle = "#888";
+            ctx.lineWidth = 1;
+            
+            // x轴
+            ctx.beginPath();
+            ctx.moveTo(50, originY);
+            ctx.lineTo(canvas.width - 50, originY);
+            ctx.stroke();
+            
+            // y轴
+            ctx.beginPath();
+            ctx.moveTo(originX, 50);
+            ctx.lineTo(originX, canvas.height - 50);
+            ctx.stroke();
+            
+            // 坐标轴箭头
+            // x轴箭头
+            ctx.beginPath();
+            ctx.moveTo(canvas.width - 50, originY);
+            ctx.lineTo(canvas.width - 60, originY - 5);
+            ctx.lineTo(canvas.width - 60, originY + 5);
+            ctx.closePath();
+            ctx.fillStyle = "#888";
+            ctx.fill();
+            
+            // y轴箭头（注意：Canvas中y轴正方向向下，所以箭头朝上）
+            ctx.beginPath();
+            ctx.moveTo(originX, 50);
+            ctx.lineTo(originX - 5, 60);
+            ctx.lineTo(originX + 5, 60);
+            ctx.closePath();
+            ctx.fill();
+            
+            // 坐标轴标签
+            ctx.font = "14px Arial";
+            ctx.fillStyle = "#555";
+            ctx.textAlign = "right";
+            ctx.textBaseline = "middle";
+            ctx.fillText("x", canvas.width - 40, originY - 10);
+            ctx.textAlign = "center";
+            ctx.textBaseline = "top";
+            ctx.fillText("y", originX + 10, 40);
+            
+            // 绘制角度标记
+            ctx.fillStyle = "#777";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            
+            // 0°
+            ctx.fillText("0°", originX + 30, originY + 15);
+            // 90°
+            ctx.fillText("90°", originX - 15, originY - 30);
+            // 180°
+            ctx.fillText("180°", originX - 30, originY + 15);
+            // 270°
+            ctx.fillText("270°", originX + 15, originY + 30);
+            // -90°
+            ctx.fillText("-90°", originX + 15, originY - 30);
+            // -180°
+            ctx.fillText("-180°", originX - 30, originY - 15);
+            // -270°
+            ctx.fillText("-270°", originX - 15, originY + 30);
+            
+            // 绘制标度
+            ctx.textAlign = "left";
+            ctx.fillStyle = "#333";
+            ctx.font = "bold 16px Arial";
+            ctx.fillText(`标度: ${scale} 像素/N`, 20, 20);
+            
+            // 绘制标度示例
+            const exampleLength = scale; // 1N的长度
+            ctx.strokeStyle = "#333";
+            ctx.lineWidth = 2;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.moveTo(20, 40);
+            ctx.lineTo(20 + exampleLength, 40);
+            ctx.stroke();
+            
+            ctx.fillText("1N", 20 + exampleLength + 5, 45);
+            
+            ctx.restore();
+        }
+        
+        // 绘制所有力
+        function drawForces() {
+            // 计算理论合力
+            const fTheory = calculateTheoreticalResultant(f1, f2);
+            
+            // 绘制平行四边形
+            drawParallelogram(f1, f2, fTheory);
+            
+            // 绘制分力 F1
+            drawArrow(originX, originY, f1.mag * scale, f1.angle, "#000000", `F₁ = ${f1.mag.toFixed(1)}N`);
+            
+            // 绘制分力 F2
+            drawArrow(originX, originY, f2.mag * scale, f2.angle, "#333333", `F₂ = ${f2.mag.toFixed(1)}N`);
+            
+            // 绘制理论合力 F'
+            drawArrow(originX, originY, fTheory.mag * scale, fTheory.angle, "#f44336", `F' = ${fTheory.mag.toFixed(1)}N`);
+            
+            // 如果显示真实合力，绘制真实合力 F（实线）
+            if (showRealForce) {
+                drawArrow(originX, originY, fReal.mag * scale, fReal.angle, "#2196f3", `F = ${fReal.mag.toFixed(1)}N`, false);
+            }
+            
+            // 更新结果显示
+            updateResults(fTheory);
+            
+            return fTheory;
+        }
+        
+        // 更新结果显示
+        function updateResults(fTheory) {
+            // 计算标准化角度
+            const f1AngleNorm = normalizeAngle(f1.angle);
+            const f2AngleNorm = normalizeAngle(f2.angle);
+            const fRealAngleNorm = normalizeAngle(fReal.angle);
+            
+            // 更新分力和合力的值
+            resultF1Mag.textContent = f1.mag.toFixed(1);
+            resultF1Angle.textContent = f1.angle.toFixed(0);
+            resultF1AngleNorm.textContent = f1AngleNorm.toFixed(0);
+            
+            resultF2Mag.textContent = f2.mag.toFixed(1);
+            resultF2Angle.textContent = f2.angle.toFixed(0);
+            resultF2AngleNorm.textContent = f2AngleNorm.toFixed(0);
+            
+            resultFTheoryMag.textContent = fTheory.mag.toFixed(1);
+            resultFTheoryAngle.textContent = fTheory.angle.toFixed(1);
+            resultFTheoryAngleNorm.textContent = fTheory.angleNorm.toFixed(1);
+            
+            resultFRealMag.textContent = fReal.mag.toFixed(1);
+            resultFRealAngle.textContent = fReal.angle.toFixed(0);
+            resultFRealAngleNorm.textContent = fRealAngleNorm.toFixed(0);
+            
+            // 计算并更新误差（使用标准化角度）
+            const error = calculateError(
+                { mag: fTheory.mag, angleNorm: fTheory.angleNorm },
+                { mag: fReal.mag, angleNorm: fRealAngleNorm }
+            );
+            magnitudeError.textContent = `${error.magError}%`;
+            directionError.textContent = `${error.angleError}%`;
+            
+            return { fTheory, error, fRealAngleNorm };
+        }
+        
+        // 绘制整个实验
+        function drawExperiment() {
+            drawAxesAndScale();
+            const fTheory = drawForces();
+            const result = updateResults(fTheory);
+            return result;
+        }
+        
+        // 更新滑块显示值
+        function updateSliderValues() {
+            f1SliderValue.textContent = f1.mag.toFixed(1);
+            f1AngleValue.textContent = `${f1.angle}°`;
+            f2SliderValue.textContent = f2.mag.toFixed(1);
+            f2AngleValue.textContent = `${f2.angle}°`;
+        }
+        
+        // 记录当前实验数据
+        function recordCurrentData() {
+            const fTheory = calculateTheoreticalResultant(f1, f2);
+            const fRealAngleNorm = normalizeAngle(fReal.angle);
+            const error = calculateError(
+                { mag: fTheory.mag, angleNorm: fTheory.angleNorm },
+                { mag: fReal.mag, angleNorm: fRealAngleNorm }
+            );
+            
+            const record = {
+                id: recordCounter++,
+                f1Mag: f1.mag.toFixed(1),
+                f1Angle: f1.angle.toFixed(0),
+                f2Mag: f2.mag.toFixed(1),
+                f2Angle: f2.angle.toFixed(0),
+                fTheoryMag: fTheory.mag.toFixed(1),
+                fTheoryAngle: fTheory.angleNorm.toFixed(1), // 使用标准化角度
+                fRealMag: fReal.mag.toFixed(1),
+                fRealAngle: fRealAngleNorm.toFixed(0), // 使用标准化角度
+                magError: error.magError,
+                angleError: error.angleError
+            };
+            
+            experimentRecords.push(record);
+            
+            // 添加数据行到表格
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${record.id}</td>
+                <td>${record.f1Mag}</td>
+                <td>${record.f1Angle}</td>
+                <td>${record.f2Mag}</td>
+                <td>${record.f2Angle}</td>
+                <td>${record.fTheoryMag}</td>
+                <td>${record.fTheoryAngle}</td>
+                <td>${record.fRealMag}</td>
+                <td>${record.fRealAngle}</td>
+                <td>${record.magError}%</td>
+                <td>${record.angleError}%</td>
+            `;
+            dataTableBody.appendChild(row);
+            
+            // 滚动到底部
+            const dataContainer = document.querySelector('.recorded-data');
+            dataContainer.scrollTop = dataContainer.scrollHeight;
+            
+            alert(`实验数据已记录，序号：${record.id}`);
+        }
+        
+        // 清空实验记录
+        function clearRecords() {
+            if (experimentRecords.length === 0) {
+                alert('当前没有实验记录可清空。');
+                return;
+            }
+            
+            if (confirm(`确定要清空所有 ${experimentRecords.length} 条实验记录吗？`)) {
+                experimentRecords = [];
+                recordCounter = 1;
+                dataTableBody.innerHTML = '';
+                alert('实验记录已清空。');
+            }
+        }
+        
+        // 导出数据为CSV
+        function exportToCSV() {
+            if (experimentRecords.length === 0) {
+                alert('没有实验记录可导出。');
+                return;
+            }
+            
+            // CSV标题行
+            let csv = '序号,F₁大小(N),F₁方向(°),F₂大小(N),F₂方向(°),理论合力F\'大小(N),理论合力F\'方向(°),真实合力F大小(N),真实合力F方向(°),大小误差(%),方向误差(%)\n';
+            
+            // 数据行
+            experimentRecords.forEach(record => {
+                csv += `${record.id},${record.f1Mag},${record.f1Angle},${record.f2Mag},${record.f2Angle},${record.fTheoryMag},${record.fTheoryAngle},${record.fRealMag},${record.fRealAngle},${record.magError},${record.angleError}\n`;
+            });
+            
+            // 创建下载链接
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `力的合成实验数据_${new Date().toLocaleDateString().replace(/\//g, '-')}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            alert(`成功导出 ${experimentRecords.length} 条实验记录。`);
+        }
+        
+        // 事件监听器
+        scaleInput.addEventListener('input', function() {
+            scale = parseInt(this.value);
+            drawExperiment();
+        });
+        
+        // F1大小控制
+        f1MagInput.addEventListener('input', function() {
+            f1.mag = parseFloat(this.value);
+            f1Slider.value = f1.mag * 10;
+            updateSliderValues();
+            drawExperiment();
+        });
+        
+        f1Slider.addEventListener('input', function() {
+            f1.mag = this.value / 10;
+            f1MagInput.value = f1.mag;
+            updateSliderValues();
+            drawExperiment();
+        });
+        
+        // F1方向控制
+        f1AngleInput.addEventListener('input', function() {
+            f1.angle = parseFloat(this.value);
+            f1AngleSlider.value = f1.angle;
+            updateSliderValues();
+            drawExperiment();
+        });
+        
+        f1AngleSlider.addEventListener('input', function() {
+            f1.angle = parseFloat(this.value);
+            f1AngleInput.value = f1.angle;
+            updateSliderValues();
+            drawExperiment();
+        });
+        
+        // F2大小控制
+        f2MagInput.addEventListener('input', function() {
+            f2.mag = parseFloat(this.value);
+            f2Slider.value = f2.mag * 10;
+            updateSliderValues();
+            drawExperiment();
+        });
+        
+        f2Slider.addEventListener('input', function() {
+            f2.mag = this.value / 10;
+            f2MagInput.value = f2.mag;
+            updateSliderValues();
+            drawExperiment();
+        });
+        
+        // F2方向控制
+        f2AngleInput.addEventListener('input', function() {
+            f2.angle = parseFloat(this.value);
+            f2AngleSlider.value = f2.angle;
+            updateSliderValues();
+            drawExperiment();
+        });
+        
+        f2AngleSlider.addEventListener('input', function() {
+            f2.angle = parseFloat(this.value);
+            f2AngleInput.value = f2.angle;
+            updateSliderValues();
+            drawExperiment();
+        });
+        
+        // 真实合力控制
+        fRealMagInput.addEventListener('input', function() {
+            fReal.mag = parseFloat(this.value);
+            drawExperiment();
+        });
+        
+        fRealAngleInput.addEventListener('input', function() {
+            fReal.angle = parseFloat(this.value);
+            drawExperiment();
+        });
+        
+        // 显示/隐藏真实合力
+        showRealForceCheckbox.addEventListener('change', function() {
+            showRealForce = this.checked;
+            drawExperiment();
+        });
+        
+        // 自动计算理论值按钮
+        autoCalcBtn.addEventListener('click', function() {
+            const fTheory = calculateTheoreticalResultant(f1, f2);
+            fReal.mag = fTheory.mag;
+            fReal.angle = fTheory.angle; // 保持原始角度值
+            fRealMagInput.value = fReal.mag.toFixed(1);
+            fRealAngleInput.value = fReal.angle.toFixed(1);
+            drawExperiment();
+        });
+        
+        // 数据记录按钮
+        recordBtn.addEventListener('click', recordCurrentData);
+        clearBtn.addEventListener('click', clearRecords);
+        exportBtn.addEventListener('click', exportToCSV);
+        
+        // 初始化
+        updateSliderValues();
+        drawExperiment();
+        
+        // 窗口大小变化时调整画布
+        window.addEventListener('resize', function() {
+            // 保持画布大小不变，但可以添加响应式逻辑
+        });
+    </script>
+</body>
+</html>
